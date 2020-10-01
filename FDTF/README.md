@@ -1,6 +1,6 @@
 ## Run:
 
 ```
-python run_mvkm.py
+python run.py
 ```
 
