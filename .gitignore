@@ -1,9 +1,20 @@
-/FDTF/__pycache__/*
+/FDTF/.idea/*
 
 /FDTF/saved_models/morf/Quiz/
 /FDTF/results/morf/Quiz/
 /FDTF/results/mastery_grids/Quiz/
 /FDTF/logs/morf/Quiz/
 /FDTF/logs/mastery_grids/Quiz/
-/FDTF/data/mastery_grids/Quiz/
-/FDTF/data/morf/Quiz/
+/FDTF/data/mastery_grids/
+/FDTF/data/morf/Quiz_Discussion/
+/FDTF/data/morf/Quiz_Lecture/
+/FDTF/data/morf/Quiz_Lecture_Discussion/
+/FDTF/data/morf/question_content/
+/FDTF/data/morf/three_resources_indexed_filtered_data.pkl
+/FDTF/cross_validation.py
+/FDTF/multiview.py
+/FDTF/run.sh
+/FDTF/output.txt
+
+
+
