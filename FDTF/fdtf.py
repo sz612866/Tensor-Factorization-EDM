@@ -130,3 +130,116 @@ class MultiView(object):
  
         loss = square_loss_q + reg_features + reg_bias
         return loss, q_count, q_rmse, reg_features, reg_bias
+
+
+    def _grad_T_ij(self, student, attempt, index, obs=None, resource=None):
+        """
+        compute the gradient of loss w.r.t a specific student j's knowledge at
+        a specific attempt i: T_{i,j,:},
+        :param attempt: index
+        :param student: index
+        :param obs: observation
+        :return:
+        """
+
+        grad = np.zeros_like(self.T[student, attempt, :])
+
+        if obs is not None:
+            pred = self._get_question_prediction(student, attempt, index)
+            if self.binarized_question:
+                grad = -2. * (obs - pred) * pred * (1. - pred) * self.Q[:, index] +\
+                       2. * self.lambda_t * self.T[student, attempt, :]
+            else:
+                grad = -2. * (obs - pred) * self.Q[:, index] + \
+                       2. * self.lambda_t * self.T[student, attempt, :]
+
+        return grad
+
+
+
+    def _grad_Q_k(self, student, attempt, question, obs=None):
+        """
+        compute the gradient of loss w.r.t a specific concept-question association
+        of a question in Q-matrix,
+        :param attempt: index
+        :param student:  index
+        :param question:  index
+        :param obs: the value at Y[attempt, student, question]
+        :return:
+        """
+
+        grad = np.zeros_like(self.Q[:, question])
+        if obs is not None:
+            pred = self._get_question_prediction(student, attempt, question)
+            if self.binarized_question:
+                grad = -2. * (obs - pred) * pred * (1. - pred) * self.T[student, attempt, :] + \
+                       2. * self.lambda_q * self.Q[:, question]
+            else:
+                grad = -2. * (obs - pred) * self.T[student, attempt, :] + \
+                       2. * self.lambda_q * self.Q[:, question]
+
+        return grad
+
+    def _grad_bias_s(self, student, attempt, material, obs=None, resource=None):
+        """
+        compute the gradient of loss w.r.t a specific bias_s
+        :param attempt:
+        :param student:
+        :param material: material material of that resource
+        :param obs:
+        :return:
+        """
+        grad = 0.
+        if obs is not None:
+            pred = self._get_question_prediction(student, attempt, material)
+            if self.binarized_question:
+                grad -= 2. * (obs - pred) * pred * (1. - pred) + \
+                        2.0 * self.lambda_bias * self.bias_s[student]
+            else:
+                grad -= 2. * (obs - pred) + 2.0 * self.lambda_bias * self.bias_s[student]
+
+        return grad
+
+
+
+    def _grad_bias_t(self, student, attempt, material, obs=None, resource=None):
+        """
+        compute the gradient of loss w.r.t a specific bias_a
+        :param attempt:
+        :param student:
+        :param material: material material of that resource
+        :return:
+        """
+        grad = 0.
+        if obs is not None:
+            pred = self._get_question_prediction(student, attempt, material)
+            if self.binarized_question:
+                grad -= 2. * (obs - pred) * pred * (1. - pred) + \
+                        2.0 * self.lambda_bias * self.bias_t[attempt]
+            else:
+                grad -= 2. * (obs - pred) + 2.0 * self.lambda_bias * self.bias_t[attempt]
+        return grad
+
+
+
+    def _grad_bias_q(self, student, attempt, question, obs=None):
+        """
+        compute the gradient of loss w.r.t a specific bias_q
+        :param attempt:
+        :param student:
+        :param question:
+        :param obs:
+        :return:
+        """
+        grad = 0.
+        if obs is not None:
+            pred = self._get_question_prediction(student, attempt, question)
+            if self.binarized_question:
+                grad -= 2. * (obs - pred) * pred * (1. - pred) + \
+                        2. * self.lambda_bias * self.bias_q[question]
+            else:
+                grad -= 2. * (obs - pred) + 2. * self.lambda_bias * self.bias_q[question]
+
+        return grad
+
+
