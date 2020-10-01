@@ -1,5 +1,6 @@
 # Tensor-Factorization-EDM
 Code accomanying the paper: Shaghayegh (Sherry) Sahebi, Yu-Ru Lin, Peter Brusilovsky: "Tensor Factorization for Student Modeling and Performance Prediction in Unstructured Domain", Proceedings of the 9th International Conference on Educational Data Mining, EDM 2020. (https://www.educationaldatamining.org/EDM2016/proceedings/paper_150.pdf)
 
-## Code implementaion:
-Siqian Zhao: szhao2@albany.edu 
+## Code Implementaion:
+* Chunpai Wang: cwang25@albany.edu
+* Siqian Zhao: szhao2@albany.edu
