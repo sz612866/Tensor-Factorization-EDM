@@ -1,3 +1,4 @@
+.DS_Store
 /FDTF/.idea/*
 
 /FDTF/saved_models/morf/Quiz/
@@ -11,10 +12,8 @@
 /FDTF/data/morf/Quiz_Lecture_Discussion/
 /FDTF/data/morf/question_content/
 /FDTF/data/morf/three_resources_indexed_filtered_data.pkl
-/FDTF/cross_validation.py
-/FDTF/multiview.py
 /FDTF/run.sh
-/FDTF/output.txt
+
 
 
 
