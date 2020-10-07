@@ -342,7 +342,7 @@ class FDTF(object):
 
             sorted_train_data = sorted(self.train_data, key = lambda x:[x[0], x[1]])
             for (student, attempt, index, obs, resource) in sorted_train_data:
-                if attempt < self.num_attempts:
+                if attempt < self.num_attempts - 1:
                    self.T[student, attempt + 1, :] = 2 * self.T[student, attempt, :] +\
                        np.true_divide(2 * (1 - self.T[student, attempt, :]), 1 + np.exp(- self.slr * self.Q[:, index])) - 1
 

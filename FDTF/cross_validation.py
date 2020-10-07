@@ -206,8 +206,8 @@ def run_morf():
 
 
     # step 1. grid search of hyperparameters
-    num_proc = 64
-    fold = 5
+    num_proc = 28
+    fold = 1
     morf_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, num_proc)
 
     # step 2. run the find_best_hyperparameter function
