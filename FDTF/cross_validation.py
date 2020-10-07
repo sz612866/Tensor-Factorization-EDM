@@ -161,7 +161,7 @@ def find_best_hyperparameters(data_str, course_str, model_str, metric, num_folds
 
     # print the sorted results
     print(strRed('data_str, course_num, model_str, concept_dim, lambda_t, '
-                 'lambda_q, lambda_bias, slr, content_weight, lr, max_iter'))
+                 'lambda_q, lambda_bias, slr, lr, max_iter'))
     for (key, val) in sorted(combined_results.items(), key=lambda x: x[1]):
         for k in key:
             print("{},".format(k), end="")
