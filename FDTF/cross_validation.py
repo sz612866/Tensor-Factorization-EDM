@@ -137,7 +137,7 @@ def find_best_hyperparameters(data_str, course_str, model_str, metric, num_folds
                        result['lambda_t'],
                        result['lambda_q'],
                        result['lambda_bias'],
-                       result['slr'],
+                       result['student_learning_rate'],
                        result['learning_rate'], result['max_iter'])
                 perf = result["perf"]['val']
                 detail_perf = result["perf"]
@@ -206,8 +206,8 @@ def run_morf():
 
 
     # step 1. grid search of hyperparameters
-    num_proc = 28
-    fold = 1
+    num_proc = 64
+    fold = 5
     morf_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, num_proc)
 
     # step 2. run the find_best_hyperparameter function
