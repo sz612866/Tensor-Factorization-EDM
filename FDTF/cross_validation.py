@@ -45,7 +45,7 @@ def check_progress(data_str, course_num, model_str, fold, restart=False):
                    result['lambda_t'],
                    result['lambda_q'],
                    result['lambda_bias'],
-                   result['slr'],
+                   result['student_learning_rate'],
                    result['learning_rate'],
                    result['max_iter'])
             if key not in progress_dict:
