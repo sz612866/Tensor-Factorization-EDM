@@ -2,18 +2,31 @@
 /FDTF/.idea/*
 
 /FDTF/saved_models/morf/Quiz/
-/FDTF/results/mastery_grids/Quiz/
+/FDTF/saved_models/morf/Quiz_Discussion/
+/FDTF/saved_models/morf/Quiz_Lecture/
+/FDTF/saved_models/morf/Quiz_Lecture_Discussion/
+/FDTF/saved_models/morf/QuizIceBreaker/
+/FDTF/saved_models/laura/
+/FDTF/saved_models/mastery_grids/
+/FDTF/results/morf/Quiz_Discussion/
+/FDTF/results/morf/Quiz_Lecture/
+/FDTF/results/morf/Quiz_Lecture_Discussion/
+/FDTF/results/morf/QuizIceBreaker/
+/FDTF/results/mastery_grids/
+/FDTF/results/laura/
 /FDTF/logs/morf/Quiz/
 /FDTF/logs/mastery_grids/Quiz/
 /FDTF/data/mastery_grids/
 /FDTF/data/morf/Quiz_Discussion/
 /FDTF/data/morf/Quiz_Lecture/
 /FDTF/data/morf/Quiz_Lecture_Discussion/
+/FDTF/data/morf/QuizIceBreaker/
 /FDTF/data/morf/question_content/
 /FDTF/data/morf/three_resources_indexed_filtered_data.pkl
+/FDTF/data/laura/QuizIceBreaker
 /FDTF/run.sh
 /FDTF/cross_val.sh
-
+/FDTF/model_analysis.py
 
 
 

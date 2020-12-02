@@ -70,7 +70,7 @@ def morf_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, n
     log_path = "logs/{}/{}/{}/val_fold_{}/".format(data_str, course_str, model_str, fold)
     make_dir(log_path)
 
-    if course_str == 'Quiz':
+    if course_str == 'Quiz_Lecture':
         # check processed hyper-parameters
         restart = False
         # restart = False
@@ -85,9 +85,9 @@ def morf_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, n
         for concept_dim in [3, 5, 7, 9]:
             for lambda_t in [0, 0.001, 0.01, 0.1]:
                 for lambda_q in [0, 0.001, 0.01, 0.1]:
-                    for lambda_bias in [0, 0.001, 0.01, 0.1]:
+                    for lambda_bias in [0, 0.0001, 0.001, 0.005]:
                         for slr in [0.1 * k for k in range(1, 11)]:
-                            for max_iter in [30, 50]:
+                            for max_iter in [30]:
                                 # for max_iter in [50]:
                                 para = (data_str, course_str, model_str, fold,
                                         concept_dim, lambda_t, lambda_q,
@@ -104,11 +104,117 @@ def morf_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, n
                                 para.append(log_file)
                                 para.append(validation)
                                 para_list.append(para)
-        print("fold {} experiment configuration: [# of cores: {}, completed: {}, remaining runs: "
-              "{}]".format(fold, num_proc, len(progress_dict), remaining))
-        pool = Pool(processes=num_proc)
-        pool.starmap(run_fdtf_exp, para_list)
-        pool.close()
+
+    if course_str == 'Quiz' or course_str == 'Quiz_Discussion' or course_str == 'Quiz_Lecture_Discussion':
+        # check processed hyper-parameters
+        restart = False
+        # restart = False
+        progress_dict = check_progress(data_str, course_str, model_str, fold, restart)
+
+        lambda_bias = 0
+        lr = 0.1
+
+
+        para_list = []
+        remaining = 0
+        for concept_dim in [3, 5, 7, 9]:
+            for lambda_t in [0, 0.001, 0.01, 0.1]:
+                for lambda_q in [0, 0.001, 0.01, 0.1]:
+                    for lambda_bias in [0, 0.001, 0.01, 0.1]:
+                        for slr in [0.1 * k for k in range(1, 11)]:
+                            for max_iter in [30]:
+                                # for max_iter in [50]:
+                                para = (data_str, course_str, model_str, fold,
+                                        concept_dim, lambda_t, lambda_q,
+                                        lambda_bias, slr, lr, max_iter)
+                                if para[4:] in progress_dict:
+                                    continue
+                                else:
+                                    remaining += 1
+                                delimiter = '_'
+                                log_name = delimiter.join([str(e) for e in para[4:]])
+                                log_file = "{}/{}".format(log_path, log_name)
+                                para = list(para)
+                                para.append(metrics)
+                                para.append(log_file)
+                                para.append(validation)
+                                para_list.append(para)
+
+    print("fold {} experiment configuration: [# of cores: {}, completed: {}, remaining runs: "
+          "{}]".format(fold, num_proc, len(progress_dict), remaining))
+    pool = Pool(processes=num_proc)
+    pool.starmap(run_fdtf_exp, para_list)
+    pool.close()
+
+
+
+def IceBreaker_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, num_proc):
+    """
+    grid search the optimal hyperparameters that achieve best 5-fold cross-validation performance
+    :param metrics:
+    :param data_str: name of dataset
+    :param course_str: course number
+    :param model_str: model name
+    :param fold:
+    :param num_proc:
+    :return: the best hyperparameters and corresponding 5 fold cross validation performance
+    """
+
+    validation = True
+    log_path = "logs/{}/{}/{}/val_fold_{}/".format(data_str, course_str, model_str, fold)
+    make_dir(log_path)
+
+    # if data_str == "morf":
+    #     validation_limit = 25
+    # elif data_str == 'laura':
+    #     validation_limit = 50
+    # elif data_str == 'mastery_grid':
+    #     validation_limit = 70
+    # else:
+    #     raise IOError
+
+    if course_str == 'QuizIceBreaker':
+        # check processed hyper-parameters
+        restart = False
+        # restart = False
+        progress_dict = check_progress(data_str, course_str, model_str, fold, restart)
+
+        lr = 0.1
+
+
+        para_list = []
+        remaining = 0
+        for concept_dim in [3, 5, 7, 9]:
+            for lambda_t in [0, 0.001, 0.01]:
+                for lambda_q in [0, 0.001, 0.01]:
+                    for lambda_bias in [0, 0.0001, 0.001]:
+                        for slr in [0.1 * k for k in range(1, 11)]:
+                            for max_iter in [20]:
+                                # for max_iter in [50]:
+                                para = (data_str, course_str, model_str, fold,
+                                        concept_dim, lambda_t, lambda_q,
+                                        lambda_bias, slr, lr, max_iter)
+                                if para[4:] in progress_dict:
+                                    continue
+                                else:
+                                    remaining += 1
+                                delimiter = '_'
+                                log_name = delimiter.join([str(e) for e in para[4:]])
+                                log_file = "{}/{}".format(log_path, log_name)
+                                para = list(para)
+                                para.append(metrics)
+                                para.append(log_file)
+                                para.append(validation)
+                                # para.append(validation_limit)
+                                para_list.append(para)
+
+    print("fold {} experiment configuration: [# of cores: {}, completed: {}, remaining runs: "
+          "{}]".format(fold, num_proc, len(progress_dict), remaining))
+    pool = Pool(processes=num_proc)
+    pool.starmap(run_fdtf_exp, para_list)
+    pool.close()
+
+
 
 
 def find_best_hyperparameters(data_str, course_str, model_str, metric, num_folds=5):
@@ -122,6 +228,7 @@ def find_best_hyperparameters(data_str, course_str, model_str, metric, num_folds
     """
     combined_results = {}
     combined_detail_results = {}
+    # for fold in [1, 4, 5]:
     for fold in range(1, num_folds + 1):
         output_path = "results/{}/{}/{}/fold_{}_cross_val.json".format(
             data_str, course_str, model_str, fold
@@ -131,6 +238,7 @@ def find_best_hyperparameters(data_str, course_str, model_str, metric, num_folds
             count = 0
             for line in f:
                 count += 1
+                # print(count)
                 result = json.loads(line)
                 key = (data_str, course_str, model_str,
                        result['concept_dim'],
@@ -200,15 +308,54 @@ def find_best_hyperparameters(data_str, course_str, model_str, metric, num_folds
 
 def run_morf():
     data_str = "morf"
-    course_str = "Quiz"
+    # course_str = "Quiz"
+    # course_str = "Quiz_Lecture"
+    # course_str = "Quiz_Discussion"
+    # course_str = "Quiz_Lecture_Discussion"
+    course_str = "QuizIceBreaker"
+
     model_str = "fdtf"
     metrics = ["rmse", "mae"]
 
 
     # step 1. grid search of hyperparameters
-    num_proc = 64
+    num_proc = 15
     fold = 5
-    morf_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, num_proc)
+    # morf_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, num_proc)
+    # IceBreaker_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, num_proc)
+
+    # step 2. run the find_best_hyperparameter function
+    find_best_hyperparameters(data_str, course_str, model_str, metric="rmse", num_folds=5)
+
+
+
+def run_laura():
+    data_str = "laura"
+    course_str = "QuizIceBreaker"
+    model_str = "fdtf"
+    metrics = ["rmse", "mae"]
+
+
+    # step 1. grid search of hyperparameters
+    num_proc = 15
+    fold = 4
+    # IceBreaker_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, num_proc)
+
+    # step 2. run the find_best_hyperparameter function
+    find_best_hyperparameters(data_str, course_str, model_str, metric="rmse", num_folds=5)
+
+
+def run_mastery_grids():
+    data_str = "mastery_grids"
+    course_str = "QuizIceBreaker"
+    model_str = "fdtf"
+    metrics = ["auc"]
+
+
+    # step 1. grid search of hyperparameters
+    num_proc = 10
+    fold = 4
+    IceBreaker_hyperparameter_tuning(data_str, course_str, model_str, metrics, fold, num_proc)
 
     # step 2. run the find_best_hyperparameter function
     # find_best_hyperparameters(data_str, course_str, model_str, metric="rmse", num_folds=5)
@@ -216,4 +363,6 @@ def run_morf():
 
 
 if __name__ == '__main__':
-    run_morf()
+    # run_morf()
+    # run_laura()
+    run_mastery_grids()
